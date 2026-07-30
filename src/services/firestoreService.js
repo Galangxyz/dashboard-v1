@@ -58,6 +58,7 @@ export const internshipsService = createService("internships");
 export const attendanceService = createService("attendance");
 export const evaluationsService = createService("evaluations");
 export const internshipStatusService = createService("internship_status");
+export const finalReportsService = createService("final_reports");
 export const usersService = createService("users");
 
 export function calculateEvaluationScore(ev) {

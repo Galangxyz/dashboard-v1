@@ -14,15 +14,20 @@ import {
   Menu,
   X,
   GraduationCap,
+  FileText,
+  FileCheck2,
+  ClipboardList,
 } from "lucide-react";
 
 const adminMenu = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "Peserta Magang", path: "/participants", icon: Users },
   { label: "Tempat Magang", path: "/internships", icon: Building2 },
-  { label: "Kehadiran", path: "/attendance", icon: CalendarCheck },
+  { label: "Review Kehadiran", path: "/admin-attendance-review", icon: ClipboardList },
+  { label: "Review Laporan Akhir", path: "/admin-final-report-review", icon: FileCheck2 },
   { label: "Penilaian Mentor", path: "/evaluations", icon: Star },
   { label: "Status Magang", path: "/status", icon: Activity },
+  { label: "Laporan PDF", path: "/reports", icon: FileText },
   { label: "Settings", path: "/settings", icon: Settings },
 ];
 
@@ -32,6 +37,7 @@ const userMenu = [
   { label: "Tempat Magang Saya", path: "/my-internship", icon: Building2 },
   { label: "Nilai Saya", path: "/my-evaluation", icon: Star },
   { label: "Status Magang", path: "/my-status", icon: Activity },
+  { label: "Laporan Akhir Magang", path: "/my-final-report", icon: FileText },
   { label: "Profil", path: "/profile", icon: User },
 ];
 
@@ -54,7 +60,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
         />
       )}
       <aside
-        className={`fixed top-0 left-0 h-full w-72 bg-neo-yellow border-r-[3px] border-black z-40 transform transition-transform duration-200 ${
+        className={`fixed top-0 left-0 h-full w-72 bg-neo-yellow border-r-[3px] border-black z-40 transform transition-transform duration-200 overflow-y-auto ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
@@ -92,7 +98,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
           ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t-[3px] border-black">
+        <div className="sticky bottom-0 left-0 right-0 p-4 border-t-[3px] border-black bg-neo-yellow">
           {userProfile && (
             <div className="flex items-center gap-3 mb-3">
               {userProfile.photoURL ? (

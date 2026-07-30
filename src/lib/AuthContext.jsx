@@ -1,101 +1,100 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import {
-  GoogleAuthProvider,
   signInWithPopup,
-  signOut,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-
-import { auth, db } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db, googleProvider, isFirebaseConfigured } from "@/lib/firebase";
 
 const AuthContext = createContext();
 
-const ADMIN_EMAILS = [
-  "admin@gmail.com",
-  // tambahkan email admin lain di sini
-];
-
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const googleLogin = async () => {
-    const provider = new GoogleAuthProvider();
-
-    const result = await signInWithPopup(auth, provider);
-    const firebaseUser = result.user;
-
-    const userRef = doc(db, "users", firebaseUser.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-      const userRole = ADMIN_EMAILS.includes(firebaseUser.email)
-        ? "admin"
-        : "user";
-
-      await setDoc(userRef, {
-        uid: firebaseUser.uid,
-        name: firebaseUser.displayName,
-        email: firebaseUser.email,
-        photoURL: firebaseUser.photoURL,
-        role: userRole,
-        createdAt: serverTimestamp(),
-      });
-    }
-  };
-
-  const logout = async () => {
-    await signOut(auth);
-  };
-
   useEffect(() => {
+    if (!isFirebaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!firebaseUser) {
-        setUser(null);
-        setRole(null);
-        setLoading(false);
-        return;
-      }
+      if (firebaseUser) {
+        const userRef = doc(db, "users", firebaseUser.uid);
+        const userSnap = await getDoc(userRef);
 
-      const userRef = doc(db, "users", firebaseUser.uid);
-      const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          const role =
+            firebaseUser.email === "fplang89@gmail.com"
+              ? "admin"
+              : "user";
 
-      setUser(firebaseUser);
+          const profileData = {
+            uid: firebaseUser.uid,
+            name: firebaseUser.displayName || "",
+            email: firebaseUser.email || "",
+            photoURL: firebaseUser.photoURL || "",
+            role,
+            createdAt: new Date(),
+          };
 
-      if (userSnap.exists()) {
-        setRole(userSnap.data().role);
+          await setDoc(userRef, profileData);
+          setUserProfile(profileData);
+        } else {
+          setUserProfile(userSnap.data());
+        }
+
+        setUser(firebaseUser);
       } else {
-        setRole("user");
+        setUser(null);
+        setUserProfile(null);
       }
 
       setLoading(false);
     });
 
-    return () => unsub();
+    return unsub;
   }, []);
+
+  const loginWithGoogle = async () => {
+    if (!isFirebaseConfigured) {
+      throw new Error("Firebase belum dikonfigurasi.");
+    }
+
+    await signInWithPopup(auth, googleProvider);
+  };
+
+  const logout = async () => {
+    if (isFirebaseConfigured) {
+      await signOut(auth);
+    }
+  };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        role,
+        userProfile,
+        role: userProfile?.role || null,
         loading,
-        googleLogin,
+        loginWithGoogle,
         logout,
+        isFirebaseConfigured,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+
+  if (!ctx) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+
+  return ctx;
+};
