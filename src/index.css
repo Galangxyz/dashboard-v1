@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 0%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 0%;
+    --radius: 1rem;
+    --font-heading: ui-sans-serif, system-ui, sans-serif;
+    --font-body: ui-sans-serif, system-ui, sans-serif;
+    --font-display: ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    --neo-yellow: #FDE047;
+    --neo-pink: #FB7185;
+    --neo-blue: #60A5FA;
+    --neo-green: #4ADE80;
+    --neo-purple: #A78BFA;
+    --neo-black: #000000;
+    --neo-white: #FFFFFF;
+    --neo-shadow: 4px 4px 0px 0px #000000;
+    --neo-shadow-sm: 3px 3px 0px 0px #000000;
+    --neo-shadow-lg: 6px 6px 0px 0px #000000;
+  }
+
+  .dark {
+    --background: 0 0% 7%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+
+    --neo-shadow: 4px 4px 0px 0px #ffffff;
+    --neo-shadow-sm: 3px 3px 0px 0px #ffffff;
+    --neo-shadow-lg: 6px 6px 0px 0px #ffffff;
+  }
+}
+
+@layer components {
+  .neo-card {
+    @apply bg-white dark:bg-neutral-900 border-[3px] border-black dark:border-white rounded-2xl;
+    box-shadow: var(--neo-shadow);
+  }
+  .neo-card-flat {
+    @apply bg-white dark:bg-neutral-900 border-[3px] border-black dark:border-white rounded-2xl;
+  }
+  .neo-btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-bold text-sm border-[3px] border-black dark:border-white rounded-xl bg-white dark:bg-neutral-900 dark:text-white cursor-pointer select-none;
+    box-shadow: var(--neo-shadow);
+    transition: all 0.15s ease;
+  }
+  .neo-btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: var(--neo-shadow-sm);
+  }
+  .neo-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px 0px #000000;
+  }
+  .neo-btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    transform: none;
+  }
+  .neo-btn-yellow { @apply bg-neo-yellow text-black; }
+  .neo-btn-pink { @apply bg-neo-pink text-black; }
+  .neo-btn-blue { @apply bg-neo-blue text-black; }
+  .neo-btn-green { @apply bg-neo-green text-black; }
+  .neo-btn-purple { @apply bg-neo-purple text-black; }
+  .neo-btn-black { @apply bg-black text-white dark:bg-white dark:text-black; }
+
+  .neo-input {
+    @apply w-full px-4 py-2.5 text-sm font-medium border-[3px] border-black dark:border-white rounded-xl bg-white dark:bg-neutral-900 dark:text-white outline-none;
+    transition: box-shadow 0.15s ease;
+  }
+  .neo-input:focus {
+    box-shadow: var(--neo-shadow-sm);
+  }
+
+  .neo-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold border-[2px] border-black dark:border-white rounded-full;
+  }
+
+  .neo-label {
+    @apply block text-sm font-bold mb-1.5;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-neo-gray text-foreground font-body;
+    background-color: #f4f4f0;
+  }
+  .dark body {
+    background-color: #0a0a0a;
+  }
+}
